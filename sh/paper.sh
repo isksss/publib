@@ -58,8 +58,7 @@ function paper-download(){
 # run paper project.
 # $1: memory size
 function paper-run(){
-    local project=$1 #ex) paper, velocity
-    local memory=$2 #ex) 1G
+    local memory=$1 #ex) 1G
 
     # if eula.txt is not exist, create eula.txt.
     if [ ! -e eula.txt ]; then

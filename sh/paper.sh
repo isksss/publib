@@ -2,11 +2,37 @@
 
 #===== info =====#
 # require: curl, jq, screen
+#        : publib/sh/log.sh
 #================#
 
 #===== var =====#
 server_jar="server.jar"
 screen_name="minecraft"
+#================#
+
+#===== init =====#
+# load publib
+if [[ `declare -F | grep -w "log_info"` ]];then
+    echo "log is success."
+else
+    echo "logger is failed."
+    . <(curl -fsSL https://raw.githubusercontent.com/isksss/publib/main/sh/log.sh)
+fi
+#check require
+if ! type "curl" > /dev/null 2>&1; then
+    echo "curl is not installed."
+    exit 1
+fi
+
+if ! type "jq" > /dev/null 2>&1; then
+    echo "jq is not installed."
+    exit 1
+fi
+
+if ! type "screen" > /dev/null 2>&1; then
+    echo "screen is not installed."
+    exit 1
+fi
 #================#
 
 # download paper project.
@@ -22,7 +48,7 @@ function paper-download(){
     local build=`echo ${response} | jq -r '.builds[-1]'`
     local jar="${project}-${version}-${build}.jar"
     local jar_url="${url}/builds/${build}/downloads/${jar}"
-
+    log_info "download jar: ${jar_url}"
     # download jar
     curl -X GET -H 'accept: application/json' -fsSL ${jar_url} -o ${server_jar}
 }
@@ -44,7 +70,7 @@ function paper-run(){
     if ! screen -list | grep -q "${screen_name}"; then
         screen -dmS ${screen_name}
     else
-        echo "screen is already exist."
+        log_error "screen is already exist."
         exit 1
     fi
 
@@ -56,7 +82,7 @@ function paper-run(){
 function paper-stop(){
     # if screen is not exist, exit.
     if ! screen -list | grep -q "${screen_name}"; then
-        echo "screen is not exist."
+        log_error "screen is not exist."
         exit 1
     fi
 
@@ -67,5 +93,6 @@ function paper-stop(){
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     default_project="paper"
     default_version="1.16.5"
+    log_warn "this file is not main."
     paper-download $default_project $default_version
 fi

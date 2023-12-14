@@ -21,17 +21,17 @@ else
 fi
 #check require
 if ! type "curl" > /dev/null 2>&1; then
-    log_error "curl is not installed."
+    log_error "${log_name}curl is not installed."
     exit 1
 fi
 
 if ! type "jq" > /dev/null 2>&1; then
-    log_error "jq is not installed."
+    log_error "${log_name}jq is not installed."
     exit 1
 fi
 
 if ! type "screen" > /dev/null 2>&1; then
-    log_error "screen is not installed."
+    log_error "${log_name}screen is not installed."
     exit 1
 fi
 #================#
@@ -49,7 +49,7 @@ function paper-download(){
     local build=`echo ${response} | jq -r '.builds[-1]'`
     local jar="${project}-${version}-${build}.jar"
     local jar_url="${url}/builds/${build}/downloads/${jar}"
-    log_info "download jar: ${jar_url}"
+    log_info "${log_name}download jar: ${jar_url}"
     # download jar
     curl -X GET -H 'accept: application/json' -fsSL ${jar_url} -o ${server_jar}
 }
@@ -70,11 +70,12 @@ function paper-run(){
     if ! screen -list | grep -q "${screen_name}"; then
         screen -dmS ${screen_name}
     else
-        log_error "screen is already exist."
+        log_error "${log_name}screen is already exist."
         exit 1
     fi
 
     # run server
+    log_info "${log_name}run server: memory=${memory}, jar=${server_jar}"
     screen -S ${screen_name} -X stuff "java -Xms${memory} -Xmx${memory} -jar ${server_jar} nogui\n"
 }
 
@@ -82,10 +83,10 @@ function paper-run(){
 function paper-stop(){
     # if screen is not exist, exit.
     if ! screen -list | grep -q "${screen_name}"; then
-        log_error "screen is not exist."
+        log_error "${log_name}screen is not exist."
         exit 1
     fi
-
+    log_info "${log_name}stop server."
     screen -S ${screen_name} -X stuff "stop\n"
 }
 
@@ -93,6 +94,6 @@ function paper-stop(){
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     default_project="paper"
     default_version="1.16.5"
-    log_warn "this file is not main."
+    log_warn "${log_name}this file is not main."
     paper-download $default_project $default_version
 fi

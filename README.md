@@ -9,6 +9,7 @@ https://raw.githubusercontent.com/isksss/publib/main/{dir}/{file}
 
 ## usage
 
+### shell
 paper.shをロードする場合
 
 ```sh

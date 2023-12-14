@@ -5,7 +5,7 @@
 #================#
 
 #===== var =====#
-log_dir="/var/log/${$1:-"publib-logger"}"
+log_dir="/var/log/publib"
 #===============#
 
 #===== init =====#

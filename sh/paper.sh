@@ -8,29 +8,30 @@
 #===== var =====#
 server_jar="server.jar"
 screen_name="minecraft"
+log_name="[paper.sh] "
 #================#
 
 #===== init =====#
 # load publib
 if [[ `declare -F | grep -w "log_info"` ]];then
-    echo "log is success."
+    log_info "${log_name}logger is loaded."
 else
     echo "logger is failed."
     . <(curl -fsSL https://raw.githubusercontent.com/isksss/publib/main/sh/log.sh)
 fi
 #check require
 if ! type "curl" > /dev/null 2>&1; then
-    echo "curl is not installed."
+    log_error "curl is not installed."
     exit 1
 fi
 
 if ! type "jq" > /dev/null 2>&1; then
-    echo "jq is not installed."
+    log_error "jq is not installed."
     exit 1
 fi
 
 if ! type "screen" > /dev/null 2>&1; then
-    echo "screen is not installed."
+    log_error "screen is not installed."
     exit 1
 fi
 #================#

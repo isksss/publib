@@ -56,8 +56,7 @@ function paper-download(){
 
 
 # run paper project.
-# $1: project name
-# $2: memory size
+# $1: memory size
 function paper-run(){
     local project=$1 #ex) paper, velocity
     local memory=$2 #ex) 1G
